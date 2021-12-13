@@ -1,0 +1,358 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="utf-8">
+<title>jQuery Mobile Web App</title>
+    
+<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css">
+<script src="jQuery/jquery-1.11.2.min.js"></script>
+<script src="jQuery/jquery.mobile-1.4.5.min.js"></script>
+<script src="myJS/myJavaScript.js"></script>
+<style>
+    #btnNewGame, #btnTopScores, #btnDescription, #btnSearch, #userPref{
+        background-color:steelblue;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        margin: 4px 2px;
+        width: 30%;
+        height: 60px;
+    }
+    #welcome
+    {
+        text-align: center;
+        color:blue; 
+        font-size:26px; 
+        font-weight: bold;
+
+    }
+
+    #displayScore p 
+    {
+        text-align: center;   
+    }
+
+    #displayScores, #displaySearchResults
+    {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    table th,td
+    {
+        padding: 10px;
+        text-align: left;
+    }
+    #score
+    {
+        color:red; 
+        font-size:26px; 
+        font-weight: bold;
+    }
+    #scoreAns
+    {
+        font-size:20px; 
+        font-weight: bold;
+    }
+    #info
+    {
+        font-size:16px;
+        font-style: italic;
+    }
+    #num
+    {
+        font-size:16px;
+        font-weight: bold;
+        text-align: center;
+    }
+    #countdown
+    {
+        text-align: right;
+        font-size:20px;
+        font-weight: bold;
+
+    }
+    #nextStepBtns button
+    {
+        background-color:steelblue;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        margin: 4px 2px;
+        width: 30%;
+        height: 60px;
+    }
+    #topScorePageBtns button
+    {
+        background-color:steelblue;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        margin: 4px 2px;
+        width: 30%;
+        height: 60px;
+    }
+</style>
+
+
+</head>
+ 
+<body> 
+
+<div data-role="page" id="page1" data-theme="a">
+    <div data-role="header">
+        <a class="active" href="#home">Home</a>
+        <h1>Naplan Y3 Numeracy Test</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content">	
+
+        <div>
+            <p style="text-align: center;">
+                <img src="images/naplan.png" alt="lego">
+             </p>
+        </div>
+
+        <div data-role="fieldcontain" style="text-align: center;">
+			<label for="txtName" style="text-align: right;">Name:</label>
+			<input type="text" name="txtName" id="txtName" size="10"/>
+        </div>
+
+        <div>
+            <p id="errorMsg" style="color: red;text-align: center;"></p>
+        </div>
+
+        <div style="text-align: center;">
+            <button data-inline="true" onclick="doStart();" style="background-color:blue;color: white;width: 38%;">Start</button>
+        </div>
+
+   </div>
+   <div data-role="footer">
+        <h4>Yanjie Li</h4>
+   </div>
+</div>
+    
+
+<div data-role="page" id="page2">
+    <div data-role="header">
+        <a class="active" href="#home" onclick="window.location.href = '#page1'; doClear();">Home</a>
+        <h1>Naplan Y3 Numeracy Test</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content">	
+         
+        <div style="text-align: center;">
+            <p id="welcome"></p>
+        </div>
+
+        <div style="text-align: center;">
+            <button data-inline="true" id="btnNewGame" onclick="doNewGame();">Start New Game</button>
+        </div>
+        <div style="text-align: center;">
+            <button data-inline="true" id="btnTopScores" onclick="doTopScores();">Top Scores</button>
+        </div>
+        <div style="text-align: center;">
+            <button data-inline="true" id="btnSearch" onclick="doSearch();">Search Scores</button>
+        </div>
+        <div style="text-align: center;">
+            <button data-inline="true" id="btnDescription" onclick="doDescription();">Game Description</button>
+        </div>
+        <div style="text-align: center;">
+            <button data-inline="true" id="userPref" onclick="goUserPref();">User Preferences</button>
+        </div>
+    </div>
+    <div data-role="footer"> 
+        <h4>Yanjie Li</h4>    
+    </div>
+</div>
+    
+<div data-role="page" id="page3">
+    <div data-role="header">
+        <a class="active" href="#home" onclick="window.location.href = '#page1'; doClear();">Home</a>
+         <h1>Naplan Y3 Numeracy Test</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content">	
+         	
+        <div id="theQuestion">
+            <p id="num"></p>
+            <p id="countdown"></p>
+
+            <p style="text-align: center" >
+                <img src="images/naplan.png" alt="ques" id="qImg">
+            </p>
+
+            <div data-role="fieldcontain" class="" data-inline="true" style="text-align: center">
+                <fieldset data-role="controlgroup" id="radGroreadioBtnDivup">
+                    <legend></legend>
+                    <input type="radio" name="radAns" id="radA"/>
+                    <label for="radA" id="a1" onclick="checkAns(this.innerHTML);"></label>
+                    
+                    <input type="radio" name="radAns" id="radB" />
+                    <label for="radB" id="a2" onclick="checkAns(this.innerHTML);"></label>
+                    
+                    <input type="radio" name="radAns" id="radC" />
+                    <label for="radC" id="a3" onclick="checkAns(this.innerHTML);"></label>
+                    
+                    <input type="radio" name="radAns" id="radD" />				
+                    <label for="radD" id="a4" onclick="checkAns(this.innerHTML);"></label>
+                    
+                </fieldset>
+            </div>	
+    
+        </div>
+        <div style="text-align: center">
+            <p style="color: red;" id="feedback"></p>
+        </div>
+
+        <div style="text-align: center;">
+             <button data-inline="true" value="Next" id="next" onclick="nextQes();">Next</button>
+        </div>
+
+        <div id="displayScore">
+            <p  >
+                <img src="images/naplan.png" alt="ques" id="faceEmoji" width="300px" height="250px">
+            </p>
+            <p id="score"></p>
+            <p id="scoreAns"></p>
+            <p id="info"></p>
+        </div>
+
+        <div id="nextStepBtns" style="text-align: center;">
+            <div>
+                <button data-inline="true"  onclick="doStore();">Store your score</button>
+            </div>
+            <div>
+                <button data-inline="true"  onclick="doNewGame();">Restart New Game</button>
+            </div>
+            <div>
+                <button data-inline="true"  onclick="doTopScores();">Top Scores</button>
+            </div>
+            <div>
+                <button data-inline="true"  onclick="doSearch();">Search Scores</button>
+            </div>
+        </div>
+
+    </div>
+    <div data-role="footer">
+        <h4>Yanjie Li</h4>
+  	</div>
+</div>
+    
+<div data-role="page" id="page4">
+    <div data-role="header" >
+        <a class="active" href="#home" onclick="window.location.href = '#page1'; doClear();">Home</a>
+          <h1>Top Scores</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content">	
+         <div style="text-align: center;">
+             <p style="font-weight: bold;font-size: x-large;">Top Scores</p>
+             <p id="displayScores"></p>
+           
+         </div>
+         <div id="topScorePageBtns" style="text-align: center;">
+            <div>
+                <button data-inline="true"  onclick="doNewGame();">Start New Game</button>
+            </div>
+            <div>
+                <button data-inline="true"  onclick="doSearch();">Search Scores</button>
+            </div>
+        </div>
+
+    </div>
+    <div data-role="footer">
+        <h4>Yanjie Li</h4>
+  	</div>
+</div>
+
+<div data-role="page" id="page5" data-dialog="true">
+    <div data-role="header" data-add-back-btn="true">
+          <h1>Game Description and Rules</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content">	
+         <div style="text-align: left;">
+             <p style="font-weight: bold;font-size: x-large;">Game Description and Rules</p>
+
+             <p>You will be presented with 5 questions randomly. You will have 10 seconds to answer each question.<br >
+                The feedback will provided to you directly when you select the answer. You can only choose once. You CANNOT skip 
+                any questions during the game.  <br />
+                You will pass the text when you score 60 or more.<br />
+                You can choose to store you score in the application and also be able to access the Top 5 Scores or search for your own score.<br />
+                Good luck!</p>
+
+
+             <p style="text-align: center;">
+                <button data-inline="true"; onclick="history.back();">Close</button>
+            </p>          
+         </div>
+    </div>
+    <div data-role="footer">
+        <h4>Yanjie Li</h4>
+  	</div>
+</div>
+
+<div data-role="page" id="page6">
+    <div data-role="header">
+        <a class="active" href="#home" onclick="window.location.href = '#page1'; doClear();">Home</a>
+          <h1>Search Scores</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content">	
+        <div style="text-align: center;">
+            <p style="font-weight: bold;font-size: x-large;">Search by name</p>
+        </div>
+
+        <div data-role="fieldcontain">
+			<label align="right" for="txtSearchName">Name:</label>
+			<input type="text" name="txtSearchName" id="txtSearchName" />
+       </div>
+       <div style="text-align: center;">
+           <button data-inline="true" id="searchP6" onclick="searchAndDisplay();">Search</button>
+       </div>
+       <div style="text-align: center;">
+            <p id="displaySearchResults"></p>
+       </div>
+  
+    </div>
+    <div data-role="footer">
+        <h4>Yanjie Li</h4>
+  	</div>
+</div>
+
+<div data-role="page" id="page7">
+    <div data-role="header" >
+        <a class="active" href="#home" onclick="window.location.href = '#page1'; doClear();">Home</a>
+            <h1>User preferences</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content">	
+        
+        <div data-role="fieldcontain">
+			<label for="txtBGColor">Background Color:</label>
+			<input type="color" name="txtBGColor" id="txtBGColor" value="#FFFFFF"/>
+        </div>
+
+        <div data-role="fieldcontain">
+			<label for="txtFontColor">Font Color:</label>
+			<input type="color" name="txtFontColor" id="txtFontColor" />
+        </div>
+
+        <div data-role="fieldcontain">
+			<label for="txtFontSize">Font Size:</label>
+			<input type="number" name="txtFontSize" id="txtFontSize" value="12" min="8" max="20" />
+        </div>
+
+        <div style="text-align: center;">
+        <button data-inline="true" onclick="savePrefs();">Save preferences</button>
+        <button data-inline="true" onclick="resetPrefs();">Reset preferences</button>
+        </div>
+
+        <div data-role="footer">
+             <h4>Yanjie Li</h4>
+        </div>
+     </div>
+</div>
+</body>
+</html>
